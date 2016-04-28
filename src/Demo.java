@@ -1,5 +1,7 @@
 import java.io.FileReader;
+import java.util.HashSet;
 import java.util.Scanner;
+import java.util.Set;
 
 import org.jgrapht.UndirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
@@ -9,9 +11,12 @@ public class Demo {
 	public UndirectedGraph<Integer, DefaultEdge> graph;
 	private String file = "input.txt";
 	public int num_vertices, num_edges;
+	public Set<Integer> graph1, graph2;
 	
-	public void run() {
+ 	public void run() {
 		graph = new SimpleGraph<Integer, DefaultEdge>(DefaultEdge.class);
+		graph1 = new HashSet<Integer>();
+		graph2 = new HashSet<Integer>();
 		read();
 	}
 	
@@ -32,6 +37,10 @@ public class Demo {
 		} catch(Exception e) {
 			System.out.println(e.getMessage());
 		}
+		
+	}
+	
+	private void split() {
 		
 	}
 	
