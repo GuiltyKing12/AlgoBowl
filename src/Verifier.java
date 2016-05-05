@@ -6,8 +6,8 @@ import java.util.Set;
 public class Verifier {
 	int test_edge = 0;
 	int cross_edge = 0;
-	private String file = "input_group14.txt";
-	private String output = "output14.txt";
+	private String file = "inputs/input_group14.txt";
+	private String output = "outputs/output_from_10_to_14.txt";
 	public int num_vertices, num_edges, previous_max1, previous_max2;
 	public Set<Integer> graph1, graph2;
 	public Set<Pair> pairs;
@@ -54,15 +54,19 @@ public class Verifier {
 	}
 	
 	public boolean verify() {
+		boolean next = false;
 		for(Pair pair : pairs) {
 			for(Integer node : graph1) {
 				for(Integer node2: graph2) {
 					if(pair.equals(new Pair(node, node2))) {
 						test_edge++;
-						continue;
+						next = true;
 					}
+					if(next) break;
 				}
+				if(next) break;
 			}
+			if(next) next = false;
 		}
 		
 		if(test_edge == cross_edge) return true;

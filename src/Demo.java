@@ -13,7 +13,7 @@ import java.util.Scanner;
 import java.util.Set;
 
 public class Demo {
-	private String file = "input_group14.txt";
+	private String file = "inputs/input_group17.txt";
 	public int num_vertices, num_edges, previous_max1, previous_max2;
 	public Set<Integer> graph1, graph2;
 	public Set<Pair> pairs;
