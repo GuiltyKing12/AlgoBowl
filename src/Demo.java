@@ -12,23 +12,20 @@ import java.util.Random;
 import java.util.Scanner;
 import java.util.Set;
 
-import org.jgrapht.UndirectedGraph;
-import org.jgrapht.graph.DefaultEdge;
-import org.jgrapht.graph.SimpleGraph;
-
 public class Demo {
-	public UndirectedGraph<Integer, DefaultEdge> graph;
-	private String file = "input_group8.txt";
+	private String file = "input_group3.txt";
 	public int num_vertices, num_edges, previous_max1, previous_max2;
 	public Set<Integer> graph1, graph2;
+	public Set<Pair> pairs;
 	Map<Integer, Node> vertices;
 	public int cross_edge;
 	
  	public void run() {
-		graph = new SimpleGraph<Integer, DefaultEdge>(DefaultEdge.class);
 		vertices = new HashMap<Integer, Node>();
 		graph1 = new HashSet<Integer>();
 		graph2 = new HashSet<Integer>();
+
+		pairs = new HashSet<Pair>();
 		read();
 		split();
 		find_min();
@@ -45,12 +42,11 @@ public class Demo {
 			num_edges = scanner.nextInt();
 			
 			for(int i = 1; i <= num_vertices; i++) {
-				graph.addVertex(i);
 				vertices.put(i, new Node(i));
 			}
 			
 			while(scanner.hasNextLine()) {
-				graph.addEdge(scanner.nextInt(), scanner.nextInt());
+				pairs.add(new Pair(scanner.nextInt(), scanner.nextInt()));
 			}
 		} catch(Exception e) {
 			System.out.println(e.getMessage());
@@ -83,25 +79,25 @@ public class Demo {
 				}
 			}
 		}
-		for(DefaultEdge edge : graph.edgeSet()) {
-			int source = graph.getEdgeSource(edge);
-			int target = graph.getEdgeTarget(edge);
+		
+		for(Pair pair : pairs) {
+			int source = pair.point1;
+			int target = pair.point2;
 			
 			if(vertices.get(source).graph != vertices.get(target).graph) {
 				vertices.get(source).cross_edge++;
 				vertices.get(target).cross_edge++;
 			}
 			vertices.get(source).adjacent_nodes.add(vertices.get(target).id);
+			vertices.get(target).adjacent_nodes.add(vertices.get(source).id);
 		}
 	}
 	
 	private void find_min() {
 		int count = 0;
-		previous_max1 = 0;
-		previous_max2 = 0;
 		while(count < num_edges) {
 			int idmax1 = 0;
-			int max_edge1 = -1;
+			int max_edge1 = 0;
 			for(Integer node : graph1) {
 				if(vertices.get(node).cross_edge > max_edge1 && node != previous_max2) {
 					idmax1 = node;
@@ -109,13 +105,10 @@ public class Demo {
 				}
 			}
 			
-			if(idmax1 == 0) {
-				System.out.println("here");
-				break;
-			}
+			if(idmax1 == 0) break;
 			
 			int idmax2 = 0;
-			int max_edge2 = -1;
+			int max_edge2 = 0;
 			for(Integer node : graph2) {
 				if(vertices.get(node).cross_edge > max_edge2 && node != previous_max1) {
 					idmax2 = node;
@@ -124,6 +117,19 @@ public class Demo {
 			}
 			
 			if(idmax2 == 0) break;
+			
+			if(pairs.contains(new Pair(idmax2, idmax1)) || pairs.contains(new Pair(idmax1, idmax2))) {
+				//System.out.println(idmax1 + " " + idmax2);
+				for(Integer node : graph2) {
+					if(!vertices.get(idmax1).adjacent_nodes.contains(node) && node != idmax2) {
+						idmax2 = node;
+					}
+				}
+				//System.out.println(idmax1 + " " + idmax2);
+			}
+			
+			previous_max1 = idmax2;
+			previous_max2 = idmax1;
 			
 			graph1.remove(idmax1);
 			graph2.remove(idmax2);
@@ -138,8 +144,10 @@ public class Demo {
 			update(vertices.get(idmax2));
 			
 			count++;
+			if(count % 10000 == 0) System.out.println("here");
 		}
 	}
+	
 	
 	private void update(Node node) {
 		node.update(vertices);
@@ -148,17 +156,34 @@ public class Demo {
 		}
 	}
 	
+	private int sum_cross_edges() {
+		int cross_edge = 0;
+		for(Integer node : graph1) {
+			cross_edge += vertices.get(node).cross_edge;
+		}
+		return cross_edge;
+	}
+	
+	
 	private void print() {
-		cross_edge = 0;
+		cross_edge = sum_cross_edges();
 		ArrayList<String> lines = new ArrayList<String>();
 		
 		for(Node node : vertices.values()) {
+			node.update(vertices);
 			if(node.cross_edge != 0) System.out.print(node.toString() + " ");
-			cross_edge += node.cross_edge;
 		}
+		
+		System.out.println();
+		/*for(Integer node : vertices.get(37).adjacent_nodes) {
+			System.out.print(vertices.get(node).toString());
+		}*/
+		
+		System.out.println();
+		
 		lines.add(cross_edge + " ");
 		System.out.println();
-		System.out.println(graph1.size());
+		System.out.println("graph1 " + graph1.size());
 		String line1 = "";
 		for(Integer node : graph1) {
 			System.out.print(node.toString() + " ");
@@ -168,15 +193,15 @@ public class Demo {
 		
 		String line2 = "";
 		System.out.println();
-		System.out.println(graph2.size());
+		System.out.println("graph2 " + graph2.size());
 		for(Integer node : graph2) {
 			System.out.print(node.toString() + " ");
 			line2 += (node + " ");
 		}
 		lines.add(line2);
 		System.out.println();
-		System.out.println(graph.edgeSet().size());
-		System.out.println(cross_edge);
+		System.out.println("edges " + pairs.size());
+		System.out.println("cross_edge " + cross_edge);
 		
 		Path file = Paths.get("output.txt");
 		
@@ -192,11 +217,11 @@ public class Demo {
 	public static void main(String[] args) {
 		Demo demo = new Demo();
 		demo.run();
-		System.out.println(demo.num_edges);
-		System.out.println(demo.graph.edgeSet());
+		System.out.println("num_edges " + demo.num_edges);
+		System.out.println(demo.pairs.toString());
 		demo.print();
 		Verifier verify = new Verifier();
-		if(verify.verify(demo.graph, demo.graph1, demo.graph2, demo.cross_edge)) System.out.println("yes");
+		if(verify.verify(demo.pairs, demo.graph1, demo.graph2, demo.cross_edge)) System.out.println("yes");
 		else System.out.println(verify.test_edge);
 	}
 }

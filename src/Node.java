@@ -5,6 +5,7 @@ import java.util.Set;
 public class Node {
 	int id;
 	int cross_edge = 0;
+	int edges = 0;
 	Set<Integer> adjacent_nodes;
 	String graph;
 	
