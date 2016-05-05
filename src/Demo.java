@@ -13,7 +13,7 @@ import java.util.Scanner;
 import java.util.Set;
 
 public class Demo {
-	private String file = "input_group3.txt";
+	private String file = "input_group14.txt";
 	public int num_vertices, num_edges, previous_max1, previous_max2;
 	public Set<Integer> graph1, graph2;
 	public Set<Pair> pairs;
@@ -175,11 +175,6 @@ public class Demo {
 		}
 		
 		System.out.println();
-		/*for(Integer node : vertices.get(37).adjacent_nodes) {
-			System.out.print(vertices.get(node).toString());
-		}*/
-		
-		System.out.println();
 		
 		lines.add(cross_edge + " ");
 		System.out.println();
@@ -218,10 +213,7 @@ public class Demo {
 		Demo demo = new Demo();
 		demo.run();
 		System.out.println("num_edges " + demo.num_edges);
-		System.out.println(demo.pairs.toString());
+		//System.out.println(demo.pairs.toString());
 		demo.print();
-		Verifier verify = new Verifier();
-		if(verify.verify(demo.pairs, demo.graph1, demo.graph2, demo.cross_edge)) System.out.println("yes");
-		else System.out.println(verify.test_edge);
 	}
 }

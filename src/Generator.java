@@ -12,7 +12,7 @@ import java.util.Set;
 
 public class Generator {
 	int num_vertices = 1000;
-	int num_edges = 99999;
+	int num_edges = 10000;
 	Set<Pair> pairs = new HashSet<Pair>();
 	List<String> lines = new ArrayList<String>();
 	Set<String> line = new HashSet<String>();
