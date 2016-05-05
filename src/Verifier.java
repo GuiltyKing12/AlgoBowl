@@ -7,7 +7,7 @@ public class Verifier {
 	int test_edge = 0;
 	int cross_edge = 0;
 	private String file = "inputs/input_group14.txt";
-	private String output = "outputs/output_from_10_to_14.txt";
+	private String output = "outputs/output_from_14_to_14.txt";
 	public int num_vertices, num_edges, previous_max1, previous_max2;
 	public Set<Integer> graph1, graph2;
 	public Set<Pair> pairs;
@@ -44,7 +44,9 @@ public class Verifier {
 				else graph2.add(scanner.nextInt());	
 			}
 			
+			System.out.println(graph1.size());
 			System.out.println(graph1.toString());
+			System.out.println(graph2.size());
 			System.out.println(graph2.toString());
 			
 			System.out.println("Graphs set up");
@@ -77,8 +79,8 @@ public class Verifier {
 		Verifier verifier = new Verifier();
 		verifier.read();
 		verifier.generate();
-		if(verifier.verify()) System.out.println("Yes");
-		else System.out.println("No");
+		if(verifier.verify()) System.out.println("Yes: Test_Edge: " + verifier.test_edge + " Cross_edges: " + verifier.cross_edge);
+		else System.out.println("No: Test_Edge: " + verifier.test_edge + " Cross_edges: " + verifier.cross_edge);
 	}
 	
 }

@@ -13,7 +13,7 @@ import java.util.Scanner;
 import java.util.Set;
 
 public class Demo {
-	private String file = "inputs/input_group17.txt";
+	private String file = "inputs/input_group16.txt";
 	public int num_vertices, num_edges, previous_max1, previous_max2;
 	public Set<Integer> graph1, graph2;
 	public Set<Pair> pairs;
@@ -119,13 +119,11 @@ public class Demo {
 			if(idmax2 == 0) break;
 			
 			if(pairs.contains(new Pair(idmax2, idmax1)) || pairs.contains(new Pair(idmax1, idmax2))) {
-				//System.out.println(idmax1 + " " + idmax2);
 				for(Integer node : graph2) {
 					if(!vertices.get(idmax1).adjacent_nodes.contains(node) && node != idmax2) {
 						idmax2 = node;
 					}
 				}
-				//System.out.println(idmax1 + " " + idmax2);
 			}
 			
 			previous_max1 = idmax2;
@@ -205,8 +203,6 @@ public class Demo {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
-		
 	}
 	
 	public static void main(String[] args) {
